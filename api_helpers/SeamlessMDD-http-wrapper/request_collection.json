@@ -1,0 +1,199 @@
+{
+  "info": {
+    "_postman_id": "12345678-abcd-efgh-ijkl-1234567890ab",
+    "name": "HTML Parser API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Update Element by Path",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"old_element_path\": \"/html/body/div[1]\",\n  \"new_element_path\": \"/html/body/div[1]/span\",\n  \"new_element_content\": \"<span>Updated Content</span>\",\n  \"important_data\": { \"style\": \"bold\" }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/update-by-path",
+          "host": ["{{base_url}}"],
+          "path": ["update-by-path"]
+        }
+      }
+    },
+    {
+      "name": "Get Elements by Path",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/get-by-path?path=/html/body/div",
+          "host": ["{{base_url}}"],
+          "path": ["get-by-path"],
+          "query": [
+            {
+              "key": "path",
+              "value": "/html/body/div",
+              "description": "Element Path"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Elements by Path",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/delete-by-path?path=/html/body/div[1]",
+          "host": ["{{base_url}}"],
+          "path": ["delete-by-path"],
+          "query": [
+            {
+              "key": "path",
+              "value": "/html/body/div[1]",
+              "description": "XPath of elements to delete"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Insert Element by Path",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"path\": \"/html/body/div[1]\",\n  \"element_text\": \"<span>New Inserted Element</span>\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/insert-by-path",
+          "host": ["{{base_url}}"],
+          "path": ["insert-by-path"]
+        }
+      }
+    },
+    {
+      "name": "Check if Node Exists",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"xpath\": \"/html/body/div[1]/span\",\n  \"node\": {\n    \"tagName\": \"span\",\n    \"attributes\": { \"_id\": \"123\" },\n    \"innerText\": \"Some Text\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/check-node-exists",
+          "host": ["{{base_url}}"],
+          "path": ["check-node-exists"]
+        }
+      }
+    },
+    {
+      "name": "Get by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/get-by-id?id=1",
+          "host": ["{{base_url}}"],
+          "path": ["get-by-id"],
+          "query": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Check if Exists",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/check-exists?id=1",
+          "host": ["{{base_url}}"],
+          "path": ["check-exists"],
+          "query": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Get by Name",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/get-by-name?name=nesto",
+          "host": ["{{base_url}}"],
+          "path": ["get-by-name"],
+          "query": [{ "key": "name", "value": "nesto" }]
+        }
+      }
+    },
+    {
+      "name": "Replace by ID",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"1\",\n  \"new_element_html\": \"<div>New Content</div>\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/replace-by-id",
+          "host": ["{{base_url}}"],
+          "path": ["replace-by-id"]
+        }
+      }
+    },
+    {
+      "name": "Remove by ID",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/remove-by-id?id=1",
+          "host": ["{{base_url}}"],
+          "path": ["remove-by-id"],
+          "query": [{ "key": "id", "value": "1" }]
+        }
+      }
+    },
+    {
+      "name": "Replace by Name",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"nesto\",\n  \"new_element_html\": \"<span>Updated Element</span>\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/replace-by-name",
+          "host": ["{{base_url}}"],
+          "path": ["replace-by-name"]
+        }
+      }
+    },
+    {
+      "name": "Remove by Name",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/remove-by-name?name=nesto",
+          "host": ["{{base_url}}"],
+          "path": ["remove-by-name"],
+          "query": [{ "key": "name", "value": "nesto" }]
+        }
+      }
+    }
+  ]
+}
