@@ -1,4 +1,4 @@
-from exceptions import ElementNotFoundError
+from utilities.exceptions import ElementNotFoundError
 from metamodel.named_element import NamedElement
 from utilities.utilities import get_class_from_parent_module
 import json
@@ -9,10 +9,26 @@ from pyecore.ecore import MetaEClass, EReference, EOrderedSet, EMetaclass
 
 class Container(NamedElement, metaclass=MetaEClass):
 
-    _elements = EReference('_elements', NamedElement, ordered=True, unique=True, containment=True, changeable=True,
-                           upper=-1)
+    _elements = EReference(
+        "_elements",
+        NamedElement,
+        ordered=True,
+        unique=True,
+        containment=True,
+        changeable=True,
+        upper=-1,
+    )
 
-    def __init__(self, _id=-1, name="", deleted=False, label=None, model=None, container=None, **kwargs):
+    def __init__(
+        self,
+        _id=-1,
+        name="",
+        deleted=False,
+        label=None,
+        model=None,
+        container=None,
+        **kwargs
+    ):
         super().__init__(_id, name, deleted, label, model, container)
 
     @property
@@ -53,7 +69,11 @@ class Container(NamedElement, metaclass=MetaEClass):
         if index != -1:
             return self._elements[index]
         else:
-            raise ElementNotFoundError("Element with id " + str(element_id) + " is not part of the current model.")
+            raise ElementNotFoundError(
+                "Element with id "
+                + str(element_id)
+                + " is not part of the current model."
+            )
 
     def to_json(self):
         return json.dumps(self, cls=ContainerJSONEncoder)
@@ -67,7 +87,12 @@ class Container(NamedElement, metaclass=MetaEClass):
             class_type = get_class_from_parent_module(c, "metamodel")
             elements[int(key)] = class_type.from_json(value)
 
-        new_object = cls(_id=data["_id"], name=data["_name"], deleted=data["_deleted"], label=data["_label"])
+        new_object = cls(
+            _id=data["_id"],
+            name=data["_name"],
+            deleted=data["_deleted"],
+            label=data["_label"],
+        )
         new_object.elements = elements
 
         for element in elements.values():
@@ -106,13 +131,15 @@ class Container(NamedElement, metaclass=MetaEClass):
 
     def __ne__(self, other):
         return not self == other
-    
+
     def to_dict(self):
         return ContainerJSONEncoder().default(self)
 
     def convert_to_tree_view_dict(self):
         parent_dict = super().convert_to_tree_view_dict()
-        parent_dict["children"] = [child_dict.convert_to_tree_view_dict() for child_dict in self._elements]
+        parent_dict["children"] = [
+            child_dict.convert_to_tree_view_dict() for child_dict in self._elements
+        ]
         return parent_dict
 
 
@@ -128,7 +155,7 @@ class ContainerJSONEncoder(JSONEncoder):
 
             elements = {element.id: element.to_dict() for element in object_.elements}
 
-            object_dict['_elements'] = elements
+            object_dict["_elements"] = elements
             object_dict["class"] = type(object_).__name__
             return object_dict
 

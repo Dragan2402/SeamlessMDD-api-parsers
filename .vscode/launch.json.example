@@ -1,0 +1,84 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "HTLM HTTP API Parser",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "flask",
+      "python": "C:\\Users\\draga\\miniconda3\\envs\\smsl-api\\python.exe",
+      "env": {
+        "FLASK_APP": "SeamlessMDD-http-wrapper/app/app.py",
+        "FLASK_DEBUG": "1"
+      },
+      "args": ["run", "--no-debugger", "--no-reload", "--port", "8000"],
+      "jinja": true,
+      "autoStartBrowser": false
+    },
+    {
+      "name": "LXML HTTP API Parser",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "flask",
+      "python": "C:\\Users\\draga\\miniconda3\\envs\\smsl-api\\python.exe",
+      "env": {
+        "FLASK_APP": "SeamlessMDD-lxml-http-parser/app/app.py",
+        "FLASK_DEBUG": "1"
+      },
+      "args": ["run", "--no-debugger", "--no-reload", "--port", "8000"],
+      "jinja": true,
+      "autoStartBrowser": false
+    },
+    {
+      "name": "HTLM HTTP API Parser tests (pytest)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "python": "C:\\Users\\draga\\miniconda3\\envs\\smsl-api\\python.exe",
+      "args": [
+        "-q",
+        "SeamlessMDD-http-wrapper/tests"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/SeamlessMDD-http-wrapper"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "LXML HTTP API Parser tests (pytest)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "python": "C:\\Users\\draga\\miniconda3\\envs\\smsl-api\\python.exe",
+      "args": [
+        "-q",
+        "SeamlessMDD-lxml-http-parser/tests"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/SeamlessMDD-lxml-http-parser"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "SeamlessMDD parsers tests (pytest)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "python": "C:\\Users\\draga\\miniconda3\\envs\\smls\\python.exe",
+      "args": [
+        "-q",
+        "SeamlessMDD/tests/parsers"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder};${workspaceFolder}/SeamlessMDD-http-wrapper"
+      },
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
+}

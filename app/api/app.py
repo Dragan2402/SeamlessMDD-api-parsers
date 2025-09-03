@@ -10,7 +10,7 @@ from metamodel.model import Model
 from transformation.data_manipulation import DataManipulation, VersionUnavailableError
 from transformation.conflict_resolution.question import Question
 from view.tree_view import prepare_model_for_tree_view
-from exceptions import ElementNotFoundError
+from utilities.exceptions import ElementNotFoundError
 from utilities.utilities import class_object_to_underscore_format, class_name_to_underscore_format
 
 from recreate_dummy_structures import make
