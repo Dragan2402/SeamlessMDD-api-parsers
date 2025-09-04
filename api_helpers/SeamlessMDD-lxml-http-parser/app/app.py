@@ -52,6 +52,32 @@ def get_by_id():
     )
 
 
+@app.route("/check-exists", methods=["GET"])
+def check_if_exists():
+    id_ = request.args.get("id")
+    file_path = request.args.get("file_path")
+
+    if id_ is None:
+        return jsonify({"error": "ID not provided"}), 400
+
+    parser = get_parser(file_path)
+    element = parser.get_element_by_id(id_)
+
+    return (
+        jsonify(
+            {
+                "exists": element is not None,
+                "element": (
+                    etree.tostring(element, method="html").decode("utf-8")
+                    if element is not None
+                    else None
+                ),
+            }
+        ),
+        200,
+    )
+
+
 @app.route("/get-by-name", methods=["GET"])
 def get_by_name():
     name = request.args.get("name")
@@ -72,6 +98,31 @@ def get_by_name():
         ),
         200,
     )
+
+
+@app.route("/get-by-path", methods=["GET"])
+def get_by_path():
+    path = request.args.get("path")
+    file_path = request.args.get("file_path")
+
+    if not path:
+        return jsonify({"error": "Path parameter is required"}), 400
+
+    parser = get_parser(file_path)
+
+    try:
+        elements = parser.get_elements_by_path(path)
+        if not elements:
+            return jsonify({"error": "Element not found"}), 404
+        # Return first element for single path query
+        return (
+            jsonify(
+                {"element": etree.tostring(elements[0], method="html").decode("utf-8")}
+            ),
+            200,
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/get-elements-by-path", methods=["GET"])
@@ -192,6 +243,76 @@ def insert_element_by_path():
     try:
         parser.insert_element_by_path(data["path"], data["element_text"])
         return jsonify({"message": "Element inserted successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/get-by-jinja-variable", methods=["GET"])
+def get_by_jinja_variable():
+    variable_name = request.args.get("variable_name")
+    file_path = request.args.get("file_path")
+
+    if variable_name is None:
+        return jsonify({"error": "Variable name not provided"}), 400
+
+    parser = get_parser(file_path)
+
+    try:
+        elements = parser.get_elements_by_jinja_variable(variable_name)
+        return (
+            jsonify(
+                {
+                    "elements": [
+                        etree.tostring(el, method="html").decode("utf-8")
+                        for el in elements
+                    ]
+                }
+            ),
+            200,
+        )
+    except AttributeError:
+        # Method not implemented in LXML parser
+        return jsonify({"elements": []}), 200
+
+
+@app.route("/update-element-by-path", methods=["POST"])
+def update_element_by_path():
+    data = request.json
+    file_path = request.args.get("file_path")
+
+    required_fields = ["old_element_path", "new_element_path", "new_element_content"]
+    if any(field not in data for field in required_fields):
+        return jsonify({"error": "Missing required fields"}), 400
+
+    parser = get_parser(file_path)
+
+    try:
+        parser.update_element_by_path(
+            data["old_element_path"],
+            data["new_element_path"],
+            data["new_element_content"],
+            data.get("important_data"),
+        )
+        return jsonify({"message": "Element updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/check-if-node-exists", methods=["POST"])
+def check_if_node_exists():
+    data = request.json
+    file_path = request.args.get("file_path")
+
+    if "xpath" not in data or "node" not in data:
+        return jsonify({"error": "Missing required fields"}), 400
+
+    parser = get_parser(file_path)
+
+    try:
+        # For LXML, we'll try to parse the node HTML string and check existence
+        node_html = data["node"] if isinstance(data["node"], str) else str(data["node"])
+        exists = parser.check_if_node_exists(data["xpath"], node_html)
+        return jsonify({"exists": exists}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

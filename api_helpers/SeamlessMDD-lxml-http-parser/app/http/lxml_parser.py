@@ -5,9 +5,18 @@ from lxml import html, etree
 
 class MyLXMLParser:
     def __init__(self, file_path: str | None = None):
-        self.tree = (
-            html.parse(file_path) if file_path else html.fromstring("<html></html>")
-        )
+        if file_path:
+            try:
+                # Try to read the file content first, then parse it
+                with open(file_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                self.tree = html.fromstring(content)
+            except Exception as e:
+                print(f"Error reading file {file_path}: {e}")
+                # Fallback to empty HTML
+                self.tree = html.fromstring("<html></html>")
+        else:
+            self.tree = html.fromstring("<html></html>")
 
     def get_element_by_id(self, id_: str):
         root = (

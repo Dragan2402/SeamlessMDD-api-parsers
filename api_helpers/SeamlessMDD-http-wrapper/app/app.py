@@ -17,20 +17,6 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 
-@app.route("/posts", methods=["GET"])
-def get_posts():
-    return (
-        jsonify(
-            [
-                {"id": 1, "title": "Post 1"},
-                {"id": 2, "title": "Post 2"},
-                {"id": 3, "title": "Post 3"},
-            ]
-        ),
-        200,
-    )
-
-
 @app.route("/get-by-id", methods=["GET"])
 def get_by_id():
     id_ = request.args.get("id")

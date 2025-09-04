@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 import threading
 import time
@@ -9,15 +10,29 @@ import requests
 
 
 def _run_flask_app():
-    # Ensure the Flask app module is importable
-    project_root = Path(__file__).resolve().parents[3]  # .../SeamlessMDD
-    workspace_root = project_root.parent  # .../Master Rad
-    wrapper_app_root = workspace_root / "api_helpers/SeamlessMDD-http-wrapper"
-    sys.path.insert(0, str(wrapper_app_root))
-    from app.api.app import create_app  # type: ignore
+    # Run HTTP wrapper Flask app as a separate process
+    project_root = Path(__file__).resolve().parents[3]  # .../SeamlessMDD-api-parsers
+    wrapper_app_root = project_root / "api_helpers/SeamlessMDD-http-wrapper"
+    app_file = wrapper_app_root / "app/app.py"
 
-    app = create_app()
-    app.run(host="127.0.0.1", port=8000, debug=False, use_reloader=False)
+    # Set environment variables
+    env = os.environ.copy()
+    env["FLASK_APP"] = str(app_file)
+    env["PYTHONPATH"] = str(wrapper_app_root)
+
+    # Run Flask app as subprocess
+    process = subprocess.Popen(
+        [
+            sys.executable,
+            "-c",
+            f"import sys; sys.path.insert(0, r'{wrapper_app_root}'); from app.app import app; app.run(host='127.0.0.1', port=8000, debug=False, use_reloader=False)",
+        ],
+        env=env,
+        cwd=str(wrapper_app_root),
+    )
+
+    # Store process for cleanup (though it will be daemon)
+    _run_flask_app.process = process
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -38,15 +53,29 @@ def api_server():
 
 
 def _run_lxml_flask_app():
-    # Ensure the LXML Flask app module is importable
-    project_root = Path(__file__).resolve().parents[3]  # .../SeamlessMDD
-    workspace_root = project_root.parent  # .../Master Rad
-    wrapper_app_root = workspace_root / "api_helpers/SeamlessMDD-lxml-http-parser"
-    sys.path.insert(0, str(wrapper_app_root))
-    from app.api.app import create_app  # type: ignore
+    # Run LXML parser Flask app as a separate process
+    project_root = Path(__file__).resolve().parents[3]  # .../SeamlessMDD-api-parsers
+    lxml_app_root = project_root / "api_helpers/SeamlessMDD-lxml-http-parser"
+    app_file = lxml_app_root / "app/app.py"
 
-    app = create_app()
-    app.run(host="127.0.0.1", port=8001, debug=False, use_reloader=False)
+    # Set environment variables
+    env = os.environ.copy()
+    env["FLASK_APP"] = str(app_file)
+    env["PYTHONPATH"] = str(lxml_app_root)
+
+    # Run Flask app as subprocess
+    process = subprocess.Popen(
+        [
+            sys.executable,
+            "-c",
+            f"import sys; sys.path.insert(0, r'{lxml_app_root}'); from app.app import app; app.run(host='127.0.0.1', port=8001, debug=False, use_reloader=False)",
+        ],
+        env=env,
+        cwd=str(lxml_app_root),
+    )
+
+    # Store process for cleanup (though it will be daemon)
+    _run_lxml_flask_app.process = process
 
 
 @pytest.fixture(scope="session")

@@ -5,10 +5,10 @@ from parsers.api_parser.implementation.lxml_http_api_parser import LxmlHttpApiPa
 
 
 def _sample_file_path() -> str:
-    project_root = Path(__file__).resolve().parents[3]
-    workspace_root = project_root.parent
+    project_root = Path(__file__).resolve().parents[3]  # .../SeamlessMDD-api-parsers
     return str(
-        workspace_root
+        project_root
+        / "api_helpers"
         / "SeamlessMDD-lxml-http-parser"
         / "app"
         / "http"
